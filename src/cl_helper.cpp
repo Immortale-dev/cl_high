@@ -40,7 +40,7 @@ cl_mem CLHelper::create_buffer(cl_context context, cl_mem_flags flags, size_t si
 	return mem;
 }
 
-cl_event CLHelper::write(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, const void *ptr, std::vector<cl_event> events) {
+cl_event CLHelper::write(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, void *ptr, std::vector<cl_event> events) {
 	cl_event event;
 	cl_int clStatus = clEnqueueWriteBuffer(queue, buffer, CL_FALSE, offset, size, ptr, events.size(), events.data(), &event);
 	confirm_status(clStatus);
@@ -48,7 +48,7 @@ cl_event CLHelper::write(cl_command_queue queue, cl_mem buffer, size_t offset, s
 	return event;
 }
 
-cl_event CLHelper::read(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, const void *ptr, std::vector<cl_event> events) {
+cl_event CLHelper::read(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, void *ptr, std::vector<cl_event> events) {
 	cl_event event;
 	cl_int clStatus = clEnqueueReadBuffer(queue, buffer, CL_FALSE, offset, size, ptr, events.size(), events.data(), &event);
 	confirm_status(clStatus);
@@ -59,7 +59,7 @@ cl_event CLHelper::read(cl_command_queue queue, cl_mem buffer, size_t offset, si
 cl_program CLHelper::create_program(cl_context context, std::vector<std::string> sources) {
 	cl_int clStatus;
 	std::vector<size_t> lengths(sources.size());
-	std::vector<char*> sources_ptrs(sources.size());
+	std::vector<const char*> sources_ptrs(sources.size());
 	for(size_t i=0;i<sources.size();i++){
 		lengths[i] = sources[i].size();
 		sources_ptrs[i] = sources[i].data();
@@ -83,10 +83,10 @@ cl_kernel CLHelper::create_kernel(cl_program program, std::string kernel_name) {
 	cl_kernel kernel = clCreateKernel(program, kernel_name_term, &clStatus);
 	confirm_status(clStatus);
 	
-	return cl_kernel;
+	return kernel;
 }
 
-void CLHelper::set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value) {
+void CLHelper::set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, void *arg_value) {
 	cl_int clStatus = clSetKernelArg(kernel, arg_index, arg_size, arg_value);
 	confirm_status(clStatus);
 }
@@ -116,7 +116,7 @@ void CLHelper::finish(cl_command_queue queue) {
 }
 
 void CLHelper::release_kernel(cl_kernel kernel) {
-	cl_int clStatus = clReleaseKernel(queue);
+	cl_int clStatus = clReleaseKernel(kernel);
 	confirm_status(clStatus);
 }
 
@@ -141,10 +141,39 @@ void CLHelper::release_command_queue(cl_command_queue queue) {
 }
 
 void CLHelper::release_context(cl_context context) {
-	cl_int clStatus = clReleaseContext(mem);
+	cl_int clStatus = clReleaseContext(context);
 	confirm_status(clStatus);
 }
 
+void CLHelper::retain_kernel(cl_kernel kernel) {
+	cl_int clStatus = clRetainKernel(kernel);
+	confirm_status(clStatus);
+}
+
+void CLHelper::retain_program(cl_program program) {
+	cl_int clStatus = clRetainProgram(program);
+	confirm_status(clStatus);
+}
+
+void CLHelper::retain_mem(cl_mem mem) {
+	cl_int clStatus = clRetainMemObject(mem);
+	confirm_status(clStatus);
+}
+
+void CLHelper::retain_event(cl_event event) {
+	cl_int clStatus = clRetainEvent(event);
+	confirm_status(clStatus);
+}
+
+void CLHelper::retain_command_queue(cl_command_queue queue) {
+	cl_int clStatus = clRetainCommandQueue(queue);
+	confirm_status(clStatus);
+}
+
+void CLHelper::retain_context(cl_context context) {
+	cl_int clStatus = clRetainContext(context);
+	confirm_status(clStatus);
+}
 
 CLHelper::PlatformInfo CLHelper::get_platform_info(cl_platform_id platform_id) {
 	PlatformInfo platform;

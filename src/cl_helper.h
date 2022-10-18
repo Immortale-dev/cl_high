@@ -49,12 +49,12 @@ class CLHelper {
 		static cl_context create_context(std::vector<cl_device_id> device_ids);
 		static cl_command_queue create_queue(cl_context context, cl_device_id device_id);
 		static cl_mem create_buffer(cl_context context, cl_mem_flags flags, size_t size);
-		static cl_event write(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, const void *ptr, std::vector<cl_event> events);
-		static cl_event read(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, const void *ptr, std::vector<cl_event> events);
+		static cl_event write(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, void *ptr, std::vector<cl_event> events = {});
+		static cl_event read(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, void *ptr, std::vector<cl_event> events = {});
 		static cl_program create_program(cl_context context, std::vector<std::string> sources);
-		static void build_program(cl_program program, std::vector<cl_device_id> devices, std::string options);
+		static void build_program(cl_program program, std::vector<cl_device_id> devices, std::string options = "");
 		static cl_kernel create_kernel(cl_program program, std::string kernel_name);
-		static void set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value);
+		static void set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, void *arg_value);
 		static cl_event run_kernel(cl_command_queue queue, cl_kernel kernel, cl_uint work_dim, const size_t offset, const size_t size, const size_t local_size, std::vector<cl_event> events);
 		static void await_events(std::vector<cl_event>);
 		static void flush(cl_command_queue queue);
@@ -65,6 +65,12 @@ class CLHelper {
 		static void release_event(cl_event event);
 		static void release_command_queue(cl_command_queue queue);
 		static void release_context(cl_context context);
+		static void retain_kernel(cl_kernel kernel);
+		static void retain_program(cl_program program);
+		static void retain_mem(cl_mem mem);
+		static void retain_event(cl_event event);
+		static void retain_command_queue(cl_command_queue queue);
+		static void retain_context(cl_context context);
 		
 	private:
 		inline static void confirm_status(cl_int status) {
