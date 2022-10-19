@@ -3,7 +3,7 @@
 
 #include "cl_helper.hpp"
 #include "context.hpp"
-#include "event.hpp"
+#include "job.hpp"
 
 namespace cl_high {
 	class Kernel;
@@ -30,9 +30,10 @@ namespace cl_high {
 			
 			static BufferBuilder from(Context context);
 			
-			// TODO:
-			Event read();
-			Event write();
+			template<typename T>
+			ReadJob read(T* ptr, size_t count, size_t offset);
+			template<typename T>
+			WriteJob write(T* ptr, size_t count, size_t offset);
 			
 		private:
 			cl_mem mem = nullptr;
@@ -51,5 +52,16 @@ namespace cl_high {
 			const Context context;
 	};
 }
+
+template<typename T>
+cl_high::ReadJob cl_high::Buffer::read(T* ptr, size_t count, size_t offset = 0) {
+	return ReadJob((void*)ptr, sizeof(T)*count, sizeof(T)*offset);
+}
+
+template<typename T>
+cl_high::WriteJob cl_high::Buffer::write(T* ptr, size_t size, size_t offset = 0) {
+	return WriteJob((void*)ptr, sizeof(T)*count, sizeof(T)*offset);
+}
+
 
 #endif // CL_HIGH_BUFFER_H_

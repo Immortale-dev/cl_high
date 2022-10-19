@@ -6,9 +6,14 @@
 #include "cl_helper.hpp"
 
 namespace cl_high {
+	class ReadJob;
+	class WriteJob;
+	class KernelJob;
 	class Event {
 		Event(cl_event event);
-		friend ComputeStation;
+		friend ReadJob;
+		friend WriteJob;
+		friend KernelJob;
 		
 		public:
 			Event();
