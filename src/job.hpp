@@ -27,6 +27,7 @@ namespace cl_high {
 		friend Buffer;
 		
 		public:
+			~ReadJob();
 			Event run();
 		
 		private:
@@ -42,6 +43,7 @@ namespace cl_high {
 		friend Buffer;
 		
 		public:
+			~WriteJob();
 			Event run();
 			
 		private:
@@ -57,6 +59,7 @@ namespace cl_high {
 		friend Kernel;
 		
 		public:
+			~KernelJob();
 			KernelJob& withParameters(size_t size, size_t local_size, size_t offset = 0, unsigned int work_dim = 1);
 			Event run();
 			

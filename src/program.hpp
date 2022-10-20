@@ -7,7 +7,7 @@
 #include "cl_helper.hpp"
 #include "context.hpp"
 #include "kernel.hpp"
-#include "event.hpp"
+#include "job.hpp"
 
 namespace cl_high {
 	class Builder;
@@ -25,8 +25,9 @@ namespace cl_high {
 			static from(Context context);
 			
 			Kernel create_kernel(std::string kernel_name);
-			// TODO
-			Event run_kernel();
+			
+			template<typename... Args>
+			KernelJob prepare_kernel(std::string kernel_name, Args... args);
 		
 		private:
 			cl_program program = nullptr;
@@ -41,6 +42,12 @@ namespace cl_high {
 		private:
 			const Context context;
 	};
+}
+
+template<typename... Args>
+cl_high::KernelJob cl_high::Program::prepare_kernel(std::string kernel_name, Args... args) {
+	Kernel kernel = create_kernel(kernel_name);
+	return kernel.prepare(...args);
 }
 
 #endif // CL_HIGH_PROGRAM_H_
