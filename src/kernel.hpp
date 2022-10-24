@@ -3,8 +3,9 @@
 
 #include <type_traits>
 
-#include "cl_helper.h"
+#include "cl_helper.hpp"
 #include "job.hpp"
+#include "buffer.hpp"
 
 namespace cl_high {
 	class Kernel {
@@ -33,13 +34,13 @@ namespace cl_high {
 			void prepare_unwrap(const int arg_num, T& arg, Args&... args);
 			template<typename T>
 			void prepare_unwrap(const int arg_num, T& arg);
+			template<typename T>
+			void prepare_unwrap(const int arg_num, T* arg);
+			
+			void prepare_unwrap(const int arg_num, Buffer& arg);
 			
 			cl_kernel kernel = nullptr;
 	};
-}
-
-cl_high::KernelJob cl_high::Kernel::prepare() {
-	return KernelJob(kernel);
 }
 
 template<typename... Args>
@@ -65,14 +66,13 @@ void cl_high::Kernel::prepare_unwrap(const int arg_num, T& arg, Args&... args) {
 }
 
 template<typename T>
-void cl_high::Kernel::prepare_unwrap(const int arg_num, T& arg){
-	typename std::remove_pointer<T>::type* val;
-	if (std::is_pointer<T>::value) {
-		val = arg;
-	} else {
-		val = &arg;
-	}
-	CLHelper::set_kernel_arg(kernel, arg_num, sizeof(std::remove_pointer<T>::type), (void*)val);
+void cl_high::Kernel::prepare_unwrap(const int arg_num, T* arg) {
+	CLHelper::set_kernel_arg(kernel, arg_num, sizeof(T), static_cast<void*>(arg));
+}
+
+template<typename T>
+void cl_high::Kernel::prepare_unwrap(const int arg_num, T& arg) {
+	prepare_unwrap(arg_num, &arg);
 }
 
 

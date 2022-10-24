@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "cl_helper.h"
-#include "device.hpp"
+#include "cl_helper.hpp"
+#include "devices.hpp"
 #include "context.hpp"
 #include "queue.hpp"
 #include "program.hpp"
@@ -24,14 +24,21 @@ namespace cl_high {
 			
 			Context get_context();
 			Queue create_queue();
-			Program build(std::vector<std::string> sources, std::string);
-			
+			Program build(std::vector<std::string> sources, std::string = "");
 			Buffer create_buffer(AccessType type, size_t size);
+			
+			template<typename T>
+			Buffer create_buffer(AccessType type, size_t count);
 			
 		private:
 			cl_device_id device_id;
 			cl_context context;
 	};
+}
+
+template<typename T>
+cl_high::Buffer cl_high::ComputeStation::create_buffer(AccessType type, size_t count) {
+	return Buffer::from(get_context()).allocate<T>(type, count);
 }
 
 #endif // CL_HIGH_COMPUTE_STATION_H_

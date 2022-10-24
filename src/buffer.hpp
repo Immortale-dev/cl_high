@@ -7,6 +7,7 @@
 
 namespace cl_high {
 	class Kernel;
+	class BufferBuilder;
 	
 	enum class AccessType {
 		READ = CL_MEM_READ_ONLY,
@@ -16,6 +17,7 @@ namespace cl_high {
 	
 	class Buffer {
 		friend Kernel;
+		friend BufferBuilder;
 		
 		Buffer(cl_mem, AccessType, size_t);
 		
@@ -31,11 +33,13 @@ namespace cl_high {
 			static BufferBuilder from(Context context);
 			
 			template<typename T>
-			ReadJob read(T* ptr, size_t count, size_t offset);
+			ReadJob read(T* ptr, size_t count, size_t offset = 0);
 			template<typename T>
-			WriteJob write(T* ptr, size_t count, size_t offset);
+			WriteJob write(T* ptr, size_t count, size_t offset = 0);
 			
 		private:
+			cl_mem& get();
+		
 			cl_mem mem = nullptr;
 			AccessType type;
 			size_t size_bytes;
@@ -47,6 +51,8 @@ namespace cl_high {
 		
 		public:
 			Buffer allocate(AccessType type, size_t size);
+			template<typename T>
+			Buffer allocate(AccessType type, size_t count);
 			
 		private:
 			const Context context;
@@ -54,13 +60,18 @@ namespace cl_high {
 }
 
 template<typename T>
-cl_high::ReadJob cl_high::Buffer::read(T* ptr, size_t count, size_t offset = 0) {
-	return ReadJob((void*)ptr, sizeof(T)*count, sizeof(T)*offset);
+cl_high::ReadJob cl_high::Buffer::read(T* ptr, size_t count, size_t offset) {
+	return ReadJob(mem, (void*)ptr, sizeof(T)*count, sizeof(T)*offset);
 }
 
 template<typename T>
-cl_high::WriteJob cl_high::Buffer::write(T* ptr, size_t size, size_t offset = 0) {
-	return WriteJob((void*)ptr, sizeof(T)*count, sizeof(T)*offset);
+cl_high::WriteJob cl_high::Buffer::write(T* ptr, size_t count, size_t offset) {
+	return WriteJob(mem, (void*)ptr, sizeof(T)*count, sizeof(T)*offset);
+}
+
+template<typename T>
+cl_high::Buffer cl_high::BufferBuilder::allocate(AccessType type, size_t count) {
+	return Buffer(CLHelper::create_buffer(context.get(), static_cast<cl_mem_flags>(type), sizeof(T) * count), type, sizeof(T) * count);
 }
 
 

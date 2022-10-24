@@ -9,7 +9,7 @@ cl_high::Kernel::Kernel(const Kernel& instance) : kernel(instance.kernel) {
 	CLHelper::retain_kernel(kernel);
 }
 
-cl_hihg::Kernel& cl_high::Kernel::operator=(const Kernel& instance) {
+cl_high::Kernel& cl_high::Kernel::operator=(const Kernel& instance) {
 	if (kernel != nullptr) {
 		CLHelper::release_kernel(kernel);
 	}
@@ -23,4 +23,12 @@ cl_hihg::Kernel& cl_high::Kernel::operator=(const Kernel& instance) {
 cl_high::Kernel::~Kernel() {
 	if (kernel == nullptr) return;
 	CLHelper::release_kernel(kernel);
+}
+
+cl_high::KernelJob cl_high::Kernel::prepare() {
+	return KernelJob(kernel);
+}
+
+void cl_high::Kernel::prepare_unwrap(const int arg_num, Buffer& arg) {
+	CLHelper::set_kernel_arg(kernel, arg_num, sizeof(cl_mem), &arg.get());
 }

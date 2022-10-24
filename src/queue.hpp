@@ -6,12 +6,17 @@
 namespace cl_high {
 	class Program;
 	class ComputeStation;
+	class Job;
+	class ReadJob;
+	class WriteJob;
+	class KernelJob;
 	
 	class Queue {
 		Queue(cl_command_queue queue);
 		friend Program;
 		friend ComputeStation;
-		
+		friend Job;
+
 		public:
 			Queue();
 			Queue(const Queue&);

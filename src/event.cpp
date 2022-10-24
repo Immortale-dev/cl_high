@@ -4,7 +4,7 @@ cl_high::Event::Event() {}
 
 cl_high::Event::Event(cl_event event) : event(event) {}
 
-cl_high::Event::Event(const& Event instance) : event(instance.event) {
+cl_high::Event::Event(const Event& instance) : event(instance.event) {
 	if (event == nullptr) return;
 	CLHelper::retain_event(event);
 }
@@ -25,7 +25,11 @@ cl_high::Event::~Event() {
 	CLHelper::release_event(event);
 }
 
-void cl_high::Event:await() {
+void cl_high::Event::await() {
 	if (event == nullptr) return;
 	CLHelper::await_events({event});
+}
+
+cl_event cl_high::Event::get() {
+	return event;
 }

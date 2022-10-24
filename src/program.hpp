@@ -10,11 +10,11 @@
 #include "job.hpp"
 
 namespace cl_high {
-	class Builder;
+	class ProgramBuilder;
 	
 	class Program {
 		Program(cl_program);
-		friend Builder;
+		friend ProgramBuilder;
 		
 		public:
 			Program();
@@ -22,7 +22,7 @@ namespace cl_high {
 			Program& operator=(const Program&);
 			virtual ~Program();
 			
-			static from(Context context);
+			static ProgramBuilder from(Context context);
 			
 			Kernel create_kernel(std::string kernel_name);
 			
@@ -33,11 +33,12 @@ namespace cl_high {
 			cl_program program = nullptr;
 	};
 	class ProgramBuilder {
+		friend Program;
 		ProgramBuilder() = delete;
 		ProgramBuilder(Context context);
 		
 		public:
-			Program build(Context context, std::vector<std::string> sources, std::string options);
+			Program build(std::vector<std::string> sources, std::string options = "");
 			
 		private:
 			const Context context;
@@ -47,7 +48,7 @@ namespace cl_high {
 template<typename... Args>
 cl_high::KernelJob cl_high::Program::prepare_kernel(std::string kernel_name, Args... args) {
 	Kernel kernel = create_kernel(kernel_name);
-	return kernel.prepare(...args);
+	return kernel.prepare(args...);
 }
 
 #endif // CL_HIGH_PROGRAM_H_

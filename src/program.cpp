@@ -1,8 +1,8 @@
 #include "program.hpp"
 
-ch_high::Program::Program() {}
+cl_high::Program::Program() {}
 
-ch_high::Program::Program(cl_program program) : program(program) {}
+cl_high::Program::Program(cl_program program) : program(program) {}
 
 cl_high::Program::Program(const Program& instance) : program(instance.program) {
 	if (program == nullptr) return;
@@ -33,9 +33,9 @@ cl_high::Kernel cl_high::Program::create_kernel(std::string kernel_name) {
 	return Kernel(CLHelper::create_kernel(program, kernel_name));
 }
 
-cl_high::ProgramBuilder cl_high::ProgramBuilder::ProgramBuilder(Context context): context(context) {}
+cl_high::ProgramBuilder::ProgramBuilder(Context context): context(context) {}
 
-cl_high::Program cl_high::ProgramBuilder::Build(std::vector<std::string> sources, std::string options) {
+cl_high::Program cl_high::ProgramBuilder::build(std::vector<std::string> sources, std::string options) {
 	cl_program program = CLHelper::create_program(context.get(), sources);
 	CLHelper::build_program(program, {context.device()}, options);
 	return Program(program);

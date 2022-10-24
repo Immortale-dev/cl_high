@@ -6,11 +6,13 @@
 #include "cl_helper.hpp"
 
 namespace cl_high {
+	class Job;
 	class ReadJob;
 	class WriteJob;
 	class KernelJob;
 	class Event {
 		Event(cl_event event);
+		friend Job;
 		friend ReadJob;
 		friend WriteJob;
 		friend KernelJob;
@@ -24,6 +26,8 @@ namespace cl_high {
 			void await();
 		
 		private:
+			cl_event get();
+		
 			cl_event event = nullptr;
 	};
 }

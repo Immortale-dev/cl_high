@@ -11,10 +11,13 @@ namespace cl_high {
 	class Devices;
 	
 	class Device {
+		friend Devices;
+		friend ComputeStation;
+		
 		public:
 			Device();
 			virtual ~Device();
-			const DeviceInfo& get_info();
+			const CLHelper::DeviceInfo& get_info();
 		
 		private:
 			Device(cl_device_id id, CLHelper::DeviceInfo info);
@@ -22,9 +25,6 @@ namespace cl_high {
 			
 			const cl_device_id id;
 			const CLHelper::DeviceInfo info;
-			
-			friend Devices;
-			friend ComputeStation;
 	};
 	class Devices {
 		Devices() = delete;

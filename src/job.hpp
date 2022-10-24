@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "cl_helper.h"
+#include "cl_helper.hpp"
 #include "queue.hpp"
 #include "event.hpp"
 
@@ -18,6 +18,10 @@ namespace cl_high {
 			Job& wait_for(std::vector<Event>);
 			virtual Event run() = 0;
 		
+		protected:
+			std::vector<cl_event> get_event_id_list();
+			cl_command_queue get_queue();
+			
 		private:
 			Queue queue;
 			std::vector<Event> events;
@@ -28,13 +32,15 @@ namespace cl_high {
 		
 		public:
 			~ReadJob();
+			ReadJob& on_queue(Queue queue);
+			ReadJob& wait_for(std::vector<Event>);
 			Event run();
 		
 		private:
 			ReadJob(cl_mem mem, void* ptr, size_t size, size_t offset);
 			
 			const cl_mem mem;
-			const void* ptr;
+			void* const ptr;
 			const size_t size;
 			const size_t offset;
 	};
@@ -44,13 +50,15 @@ namespace cl_high {
 		
 		public:
 			~WriteJob();
+			WriteJob& on_queue(Queue queue);
+			WriteJob& wait_for(std::vector<Event>);
 			Event run();
 			
 		private:
 			WriteJob(cl_mem mem, void* ptr, size_t size, size_t offset);
 			
 			const cl_mem mem;
-			const void* ptr;
+			void* const ptr;
 			const size_t size;
 			const size_t offset;
 	};
@@ -60,7 +68,9 @@ namespace cl_high {
 		
 		public:
 			~KernelJob();
-			KernelJob& withParameters(size_t size, size_t local_size, size_t offset = 0, unsigned int work_dim = 1);
+			KernelJob& on_queue(Queue queue);
+			KernelJob& wait_for(std::vector<Event>);
+			KernelJob& with_parameters(size_t size, size_t local_size, size_t offset = 0, unsigned int work_dim = 1);
 			Event run();
 			
 		private:

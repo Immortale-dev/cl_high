@@ -4,7 +4,7 @@ cl_high::Queue::Queue() {}
 
 cl_high::Queue::Queue(cl_command_queue queue) : queue(queue) {}
 
-cl_high::Queue::Queue(const Queue& instance) queue(instance.queue) {
+cl_high::Queue::Queue(const Queue& instance): queue(instance.queue) {
 	if (queue == nullptr) return;
 	CLHelper::retain_command_queue(queue);
 }

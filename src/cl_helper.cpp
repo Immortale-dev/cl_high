@@ -1,4 +1,4 @@
-#include "cl_helper.h"
+#include "cl_helper.hpp"
 
 std::vector<cl_platform_id> CLHelper::get_platform_ids(){
 	cl_uint num_platforms;

@@ -4,25 +4,27 @@
 #include "cl_helper.hpp"
 
 namespace cl_high {
-	class Builder;
+	class ProgramBuilder;
+	class BufferBuilder;
 	class ComputeStation;
 	
 	class Context {
 		Context(cl_context context, cl_device_id device_id);
+		friend ProgramBuilder;
 		friend ComputeStation;
-		friend Builder;
+		friend BufferBuilder;
 		
 		public:
 			Context();
 			virtual ~Context();
 			
 		private:
-			cl_context get();
-			cl_device_id device();
+			cl_context get() const;
+			cl_device_id device() const;
 			
 			const cl_context context;
 			const cl_device_id device_id;
 	};
 }
 
-#enfif // CL_HIGH_CONTEXT_H_
+#endif // CL_HIGH_CONTEXT_H_

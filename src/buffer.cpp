@@ -2,7 +2,7 @@
 
 cl_high::Buffer::Buffer() {}
 
-cl_high::Buffer::Buffer(cl_mem mem, AccessType type, size_t size_bytes) : mem(mem), type(type), syze_bytes(size_bytes) {}
+cl_high::Buffer::Buffer(cl_mem mem, AccessType type, size_t size_bytes) : mem(mem), type(type), size_bytes(size_bytes) {}
 
 cl_high::Buffer::Buffer(const Buffer& instance) : mem(instance.mem), type(instance.type), size_bytes(instance.size_bytes) {
 	if (mem == nullptr) return;
@@ -35,12 +35,16 @@ size_t cl_high::Buffer::size() {
 	return size_bytes;
 }
 
+cl_mem& cl_high::Buffer::get() {
+	return mem;
+}
+
 cl_high::BufferBuilder cl_high::Buffer::from(Context context) {
 	return BufferBuilder(context);
 }
 
-cl_high::BufferBuilder:BufferBuilder(Context context): context(context) {}
+cl_high::BufferBuilder::BufferBuilder(Context context): context(context) {}
 
 cl_high::Buffer cl_high::BufferBuilder::allocate(AccessType type, size_t size) {
-	return Buffer(CLHelper::create_buffer(context.get(), type, size));
+	return Buffer(CLHelper::create_buffer(context.get(), static_cast<cl_mem_flags>(type), size), type, size);
 }
