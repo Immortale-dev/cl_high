@@ -2,6 +2,7 @@
 #define CL_HIGH_EVENT_
 
 #include <memory>
+#include <vector>
 
 #include "cl_helper.hpp"
 
@@ -24,6 +25,8 @@ namespace cl_high {
 			virtual ~Event();
 			
 			void await();
+			
+			static void await(std::vector<Event> events);
 		
 		private:
 			cl_event get();

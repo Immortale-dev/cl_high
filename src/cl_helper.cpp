@@ -3,9 +3,13 @@
 std::vector<cl_platform_id> CLHelper::get_platform_ids(){
 	cl_uint num_platforms;
 	cl_int clStatus = clGetPlatformIDs(0, NULL, &num_platforms);
-	confirm_status(clStatus);
 	
 	std::vector<cl_platform_id> platforms(num_platforms);
+	if(!num_platforms){
+		return platforms;
+	}
+	confirm_status(clStatus);
+	
 	clStatus = clGetPlatformIDs(num_platforms, platforms.data(), NULL);
 	confirm_status(clStatus);
 	
@@ -15,9 +19,13 @@ std::vector<cl_platform_id> CLHelper::get_platform_ids(){
 std::vector<cl_device_id> CLHelper::get_device_ids(cl_platform_id platform_id, cl_device_type device_type) {
 	cl_uint num_devices;
 	cl_int clStatus = clGetDeviceIDs( platform_id, device_type, 0, NULL, &num_devices);
+	
+	std::vector<cl_device_id> devices(num_devices);	
+	if(!num_devices || clStatus == CL_DEVICE_NOT_FOUND) {
+		return devices;
+	}
 	confirm_status(clStatus);
 	
-	std::vector<cl_device_id> devices(num_devices);
 	clStatus = clGetDeviceIDs( platform_id, device_type, num_devices, devices.data(), NULL);
 	confirm_status(clStatus);
 	
@@ -74,7 +82,17 @@ void CLHelper::build_program(cl_program program, std::vector<cl_device_id> devic
 	char* options_term = to_null_terminated_char_ptr(options);
 	cl_int clStatus = clBuildProgram(program, devices.size(), devices.data(), options_term, NULL, NULL);
 	delete options_term;
-	confirm_status(clStatus);
+	if (clStatus != CL_SUCCESS) {
+		throw CLError(clStatus, get_program_log(program, devices[0]));
+	}
+}
+
+std::string CLHelper::get_program_log(cl_program program, cl_device_id device_id) {
+	size_t log_size;
+	clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+	std::vector<char> value(log_size);
+	clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, log_size, value.data(), NULL);
+	return std::string(value.begin(), value.end());
 }
 
 cl_kernel CLHelper::create_kernel(cl_program program, std::string kernel_name) {
@@ -202,8 +220,6 @@ cl_context CLHelper::create_context (std::vector<cl_device_id> device_ids) {
 	confirm_status(clStatus);
 	return context;
 }
-
-
 
 
 std::string CLHelper::get_platform_info_param(cl_platform_id platform_id, cl_platform_info param) {

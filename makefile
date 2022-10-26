@@ -1,4 +1,4 @@
-.PHONY: all generate_o generate_t
+.PHONY: all custom generate_o generate_t
 
 CC=g++
 OPT=-g
@@ -17,11 +17,11 @@ all: generate_o generate_t
 generate_o: ${OBJS}
 
 generate_t:
-	$(CC) $(CFLAGS) test/testch.cpp -o test/test.o $(LDFLAGS) $(INCL)  $(OPT)
+	$(CC) $(CFLAGS) test/test.cpp -o test/test.o $(LDFLAGS) $(INCL) $(OPT)
 	$(CC) -o test.exe test/test.o $(OBJS) $(INCL) $(LDFLAGS)
 
 custom: generate_o
-	$(CC) $(CFLAGS) test/mtest.cpp -o test/mtest.o $(LDFLAGS) $(INCL)
-	$(CC) test/mtest.o $(OBJS) $(INCL) -o mtest.exe
+	$(CC) $(CFLAGS) test/mtest.cpp -o test/mtest.o $(LDFLAGS) $(INCL) $(OPT)
+	$(CC) test/mtest.o $(OBJS) $(INCL) $(LDFLAGS) -o mtest.exe
 %.o: %.cpp
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS) $(INCL) $(OPT)

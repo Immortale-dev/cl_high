@@ -18,6 +18,11 @@
  *           returns an instance of Program class.
  *   @public [Buffer] create_buffer(AccessType type, size_t size)
  * ------------------------------
+ * @class Platform - describes open cl platform
+ *   @public [const CLHelper::DeviceInfo&] get_info() - returns
+ *           CLHelper::PlatformInfo class instance containing base information
+ *           about the open cl platform.
+ * ------------------------------
  * @class Devices - is a static class used to retrieve information about
  *        computation devices.
  *   @public @static [std::vector<Device>] cpu_devices() - returns a list of
@@ -29,7 +34,7 @@
  * ------------------------------
  * @class Device - is a class conntatining information about a single
  *        computation device.
- *   @public [const CLHelper::DeviceInfo&] get_info() - returns DeviceInfo
+ *   @public [const CLHelper::DeviceInfo&] get_info() - returns CLHelper::DeviceInfo
  *           class instance containing base information about the compute
  *           device.
  * ------------------------------
@@ -75,6 +80,9 @@
  *   @public [Program] build(std::vector<std::string> sources[,
  *           std::string options]) - creates and compiles kernel programs
  *           and returns Program class instance.
+ *   @public [Program] build(std::string source[, std::string options]) -
+ *           creates and compiles kernel programs and returns Program class
+ *           instance.
  * ------------------------------
  * @class Kernel - used to run kernel functions on compute devices.
  *   @public [KernelJob] prepare() - returns a KernelJob class instance
@@ -116,6 +124,8 @@
  * ------------------------------
  * @class Event - corresponding to the running job.
  *   @public [void] await() - awaits the job.
+ *   @public @static [void] await(std::vector<Event> events) - awaits the list
+ *           of jobs.
  */
 
 #include "compute_station.hpp"

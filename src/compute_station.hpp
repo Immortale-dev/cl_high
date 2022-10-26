@@ -16,6 +16,7 @@ namespace cl_high {
 		ComputeStation(Device device);
 		
 		public:
+			ComputeStation();
 			ComputeStation(const ComputeStation&);
 			ComputeStation& operator=(const ComputeStation&);
 			virtual ~ComputeStation();
@@ -24,7 +25,8 @@ namespace cl_high {
 			
 			Context get_context();
 			Queue create_queue();
-			Program build(std::vector<std::string> sources, std::string = "");
+			Program build(std::vector<std::string> sources, std::string options = "");
+			Program build(std::string source, std::string options = "");
 			Buffer create_buffer(AccessType type, size_t size);
 			
 			template<typename T>

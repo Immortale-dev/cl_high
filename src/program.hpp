@@ -38,6 +38,7 @@ namespace cl_high {
 		ProgramBuilder(Context context);
 		
 		public:
+			Program build(std::string source, std::string options = "");
 			Program build(std::vector<std::string> sources, std::string options = "");
 			
 		private:

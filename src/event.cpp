@@ -30,6 +30,14 @@ void cl_high::Event::await() {
 	CLHelper::await_events({event});
 }
 
+void cl_high::Event::await(std::vector<Event> events) {
+	std::vector<cl_event> event_ids;
+	for(auto& it : events) {
+		event_ids.push_back(it.get());
+	}
+	CLHelper::await_events(event_ids);
+}
+
 cl_event cl_high::Event::get() {
 	return event;
 }

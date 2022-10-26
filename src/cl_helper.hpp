@@ -15,7 +15,7 @@ class CLHelper {
 	public:
 		class CLError : public std::exception {
 			public:
-				CLError(cl_int code) : msg(default_msg + std::to_string(code)) {}
+				CLError(cl_int code, std::string additional = "") : msg(default_msg + std::to_string(code) + " " + additional) {}
 				const char * what () const throw () {
 					return msg.data();
 				}
@@ -53,9 +53,10 @@ class CLHelper {
 		static cl_event read(cl_command_queue queue, cl_mem buffer, size_t offset, size_t size, void *ptr, std::vector<cl_event> events = {});
 		static cl_program create_program(cl_context context, std::vector<std::string> sources);
 		static void build_program(cl_program program, std::vector<cl_device_id> devices, std::string options = "");
+		static std::string get_program_log(cl_program program, cl_device_id device_id);
 		static cl_kernel create_kernel(cl_program program, std::string kernel_name);
 		static void set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, void *arg_value);
-		static cl_event run_kernel(cl_command_queue queue, cl_kernel kernel, cl_uint work_dim, const size_t offset, const size_t size, const size_t local_size, std::vector<cl_event> events);
+		static cl_event run_kernel(cl_command_queue queue, cl_kernel kernel, cl_uint work_dim, const size_t offset, const size_t size, const size_t local_size, std::vector<cl_event> events = {});
 		static void await_events(std::vector<cl_event>);
 		static void flush(cl_command_queue queue);
 		static void finish(cl_command_queue queue);

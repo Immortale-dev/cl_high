@@ -35,6 +35,10 @@ cl_high::Kernel cl_high::Program::create_kernel(std::string kernel_name) {
 
 cl_high::ProgramBuilder::ProgramBuilder(Context context): context(context) {}
 
+cl_high::Program cl_high::ProgramBuilder::build(std::string source, std::string options) {
+	return build(std::vector<std::string>(1, source), options);
+}
+
 cl_high::Program cl_high::ProgramBuilder::build(std::vector<std::string> sources, std::string options) {
 	cl_program program = CLHelper::create_program(context.get(), sources);
 	CLHelper::build_program(program, {context.device()}, options);

@@ -10,6 +10,21 @@ namespace cl_high {
 	class ComputeStation;
 	class Devices;
 	
+	class Platform {
+		friend Devices;
+		
+		public:
+			Platform();
+			virtual ~Platform();
+			const CLHelper::PlatformInfo& get_info();
+		
+		private:
+			Platform(cl_platform_id id, CLHelper::PlatformInfo info);
+			cl_platform_id get();
+			
+			const cl_platform_id id;
+			const CLHelper::PlatformInfo info;
+	};
 	class Device {
 		friend Devices;
 		friend ComputeStation;
@@ -30,9 +45,10 @@ namespace cl_high {
 		Devices() = delete;
 		
 		public:
-			static std::vector<Device> cpu_devices();
-			static std::vector<Device> gpu_devices();
-			static std::vector<Device> all_devices();
+			static std::vector<Platform> platforms();
+			static std::vector<Device> cpu_devices(Platform platform = {});
+			static std::vector<Device> gpu_devices(Platform platform = {});
+			static std::vector<Device> all_devices(Platform platform = {});
 			
 		private:
 			static const cl_platform_id get_first_platform_id();
