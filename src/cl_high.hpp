@@ -65,7 +65,7 @@
  *           buffer that occupies `sizeof(T) * count` amount of bytes on
  *           device.
  * ------------------------------
- * @class Program - keeps information about compiler kernel functions on a
+ * @class Program - keeps information about compiled kernel functions on a
  *        device. It also allows to run the kernel functions on queues.
  *   @public @static [ProgramBuilder] from(Context context) - returns
  *           ProgramBuilder used to create and compile kernel programs.

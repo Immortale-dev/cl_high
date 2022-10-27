@@ -29,6 +29,7 @@ cl_high::Buffer::~Buffer() {
 void cl_high::Buffer::release() {
 	if (mem == nullptr) return;
 	CLHelper::release_mem(mem);
+	mem = nullptr;
 }
 
 size_t cl_high::Buffer::size() {
