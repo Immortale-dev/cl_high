@@ -1,27 +1,42 @@
-.PHONY: all custom generate_o generate_t
+.PHONY: all custom
 
 CC=g++
 OPT=-g
 CFLAGS=-c -Wall -std=c++14
-OPENCL_I=-I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include"
-OPENCL_L=-L"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\lib\x64"
-LDFLAGS:=${OPENCL_I} ${OPENCL_L} -lOpenCL
 SRCPATH:=src/
 SRCS:=$(wildcard $(SRCPATH)*.cpp)
 OBJS:=$(SRCS:%.cpp=%.o)
 
-INCL=-Isrc -Itest
+LDFLAGS:=
+# include LDFLAGS and LOCAL vaiables
+include makefile.flags
 
-all: generate_o generate_t
+INCL=-Isrc -Itest ${LOCAL_OPENCL_I}
 
-generate_o: ${OBJS}
+# OS dependent variables
+RM=
+ifeq ($(OS),Windows_NT)
+	RM=del
+else
+	RM=rm
+endif
 
-generate_t:
-	$(CC) $(CFLAGS) test/test.cpp -o test/test.o $(LDFLAGS) $(INCL) $(OPT)
-	$(CC) -o test.exe test/test.o $(OBJS) $(INCL) $(LDFLAGS)
+export CFLAGS
+export OPT
 
-custom: generate_o
-	$(CC) $(CFLAGS) test/mtest.cpp -o test/mtest.o $(LDFLAGS) $(INCL) $(OPT)
-	$(CC) test/mtest.o $(OBJS) $(INCL) $(LDFLAGS) -o mtest.exe
+all: test.exe
+
+custom: mtest.exe
+
+liboutput.a: $(OBJS)
+	$(RM) liboutput.a
+	ar -qcT liboutput.a $(OBJS)
+
+test.exe: liboutput.a test/test.o
+	$(CC) -o test.exe test/test.o liboutput.a $(LDFLAGS) $(OPT)
+	
+mtest.exe: liboutput.a test/mtest.o
+	$(CC) -o mtest.exe test/mtest.o liboutput.a $(LDFLAGS) $(OPT)
+
 %.o: %.cpp
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS) $(INCL) $(OPT)
+	$(CC) $(CFLAGS) $< -o $@ $(INCL) $(OPT)
