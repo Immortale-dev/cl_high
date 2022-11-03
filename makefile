@@ -1,4 +1,4 @@
-.PHONY: all custom
+.PHONY: all custom lib
 
 CC=g++
 OPT=-g
@@ -21,12 +21,11 @@ else
 	RM=rm
 endif
 
-export CFLAGS
-export OPT
-
 all: test.exe
 
 custom: mtest.exe
+
+lib: liboutput.a
 
 liboutput.a: $(OBJS)
 	$(RM) liboutput.a
