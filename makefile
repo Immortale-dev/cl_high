@@ -1,4 +1,4 @@
-.PHONY: all custom lib
+.PHONY: all custom lib clear
 
 CC=g++
 OPT=-g
@@ -7,25 +7,19 @@ SRCPATH:=src/
 SRCS:=$(wildcard $(SRCPATH)*.cpp)
 OBJS:=$(SRCS:%.cpp=%.o)
 
-LDFLAGS:=
-# include LDFLAGS and LOCAL vaiables
+# include LIBS flags
 include makefile.flags
 
-INCL=-Isrc -Itest ${LOCAL_OPENCL_I}
-
-# OS dependent variables
-RM=
-ifeq ($(OS),Windows_NT)
-	RM=del
-else
-	RM=rm
-endif
+LDFLAGS:=$(LIBS_LD)
+INCL=-Isrc -Itest ${LIBS_INC}
 
 all: test.exe
 
 custom: mtest.exe
 
 lib: liboutput.a
+
+clear: ; $(RM) src/*.o *.exe liboutput.a
 
 liboutput.a: $(OBJS)
 	$(RM) liboutput.a

@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <exception>
+#include <cstring>
 
 class CLHelper {
 	public:
