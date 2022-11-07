@@ -352,8 +352,13 @@ Defines *events* (jobs that are beigb processed) that needs to be awaited before
 
 ***Note:*** returns **\*this**.
 
-#### cl_high::KernelJob& with_parameters(size_t size, size_t loacl_size[, size_t offset, unsigned int work_dim])
-Defines global and local sizes to run the kernel as well as the offset and number of working dimenions. **offset** and **work_dim** are optionala. If not apssed, `0` and `1` will be assigned respectfully. More information about these parameters can be found on [opencl doc](https://registry.khronos.org/OpenCL/sdk/1.0/docs/man/xhtml/clEnqueueNDRangeKernel.html).
+#### cl_high::KernelJob& with_parameters(size_t size, size_t loacl_size[, size_t offset])
+Defines global and local sizes to run the kernel as well as the offset and number of working dimenions. **offset** is optional. If not apssed, `0` will be assigned. Work dimension is `1`. More information about these parameters can be found on [opencl doc](https://registry.khronos.org/OpenCL/sdk/1.0/docs/man/xhtml/clEnqueueNDRangeKernel.html).
+
+#### cl_high::KernelJob& with_parameters(std::vector\<size_t\> sizes, std::vector\<size_t\> local_sizes[, std::vector\<size_t\> offsets])
+Same as above, but work dimentions equals to the size of **sizes** vector, and parameters are provided for each working directory using *std::vector* structures.
+
+***Note:*** the size of the **sizes**, **local_sizes**, and **offsets** (if provided) vectors must be the same.
 
 #### cl_high::Event run()
 Runs the job and returns the instance of **cl_high::Event** class that can be awaited manually, or sent to other job and block it until the event is finished.

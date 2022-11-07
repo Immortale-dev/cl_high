@@ -198,7 +198,7 @@ DESCRIBE("CLHelper", {
 					CLHelper::set_kernel_arg(kernel, 1, sizeof(cl_mem), &mA);
 					CLHelper::set_kernel_arg(kernel, 2, sizeof(cl_mem), &mB);
 					CLHelper::set_kernel_arg(kernel, 3, sizeof(cl_mem), &mC);
-					cl_event er = CLHelper::run_kernel(queue, kernel, 1, 0, SIZE, 64);
+					cl_event er = CLHelper::run_kernel(queue, kernel, {0}, {SIZE}, {64});
 					cl_event ec = CLHelper::read(queue, mC, 0, SIZE * sizeof(float), C.data(), {er});
 					CLHelper::await_events({ec});
 					for(size_t i=0;i<SIZE;i++) {

@@ -109,10 +109,10 @@ void CLHelper::set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_si
 	confirm_status(clStatus);
 }
 
-cl_event CLHelper::run_kernel(cl_command_queue queue, cl_kernel kernel, cl_uint work_dim, const size_t offset, const size_t size, const size_t local_size, std::vector<cl_event> events) {
+cl_event CLHelper::run_kernel(cl_command_queue queue, cl_kernel kernel, const std::vector<size_t> offsets, const std::vector<size_t> sizes, const std::vector<size_t> local_sizes, std::vector<cl_event> events) {
 	cl_event event;
 	cl_int clStatus;
-	clStatus = clEnqueueNDRangeKernel(queue, kernel, work_dim, &offset, &size, &local_size, events.size(), events.data(), &event);
+	clStatus = clEnqueueNDRangeKernel(queue, kernel, sizes.size(), offsets.data(), sizes.data(), local_sizes.data(), events.size(), events.data(), &event);
 	confirm_status(clStatus);
 	
 	return event;

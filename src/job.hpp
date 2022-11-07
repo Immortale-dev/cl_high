@@ -70,17 +70,17 @@ namespace cl_high {
 			~KernelJob();
 			KernelJob& on_queue(Queue queue);
 			KernelJob& wait_for(std::vector<Event>);
-			KernelJob& with_parameters(size_t size, size_t local_size, size_t offset = 0, unsigned int work_dim = 1);
+			KernelJob& with_parameters(size_t size, size_t local_size, size_t offset = 0);
+			KernelJob& with_parameters(std::vector<size_t> sizes, std::vector<size_t> local_sizes, std::vector<size_t> offsets = {});
 			Event run();
 			
 		private:
 			KernelJob(cl_kernel kernel);
 			
 			const cl_kernel kernel;
-			size_t size;
-			size_t local_size;
-			size_t offset;
-			cl_uint work_dim;
+			std::vector<size_t> sizes;
+			std::vector<size_t> local_sizes;
+			std::vector<size_t> offsets;
 	};
 }
 

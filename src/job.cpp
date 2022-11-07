@@ -88,14 +88,20 @@ cl_high::KernelJob& cl_high::KernelJob::wait_for(std::vector<Event> events) {
 	return *this;
 }
 
-cl_high::KernelJob& cl_high::KernelJob::with_parameters(size_t size, size_t local_size, size_t offset, unsigned int work_dim) {
-	this->size = size;
-	this->local_size = local_size;
-	this->offset = offset;
-	this->work_dim = work_dim;
+cl_high::KernelJob& cl_high::KernelJob::with_parameters(size_t size, size_t local_size, size_t offset) {
+	this->sizes = {size};
+	this->local_sizes = {local_size};
+	this->offsets = {offset};
+	return *this;
+}
+
+cl_high::KernelJob& cl_high::KernelJob::with_parameters(std::vector<size_t> sizes, std::vector<size_t> local_sizes, std::vector<size_t> offsets) {
+	this->sizes = sizes;
+	this->local_sizes = local_sizes;
+	this->offsets = offsets;
 	return *this;
 }
 
 cl_high::Event cl_high::KernelJob::run() {
-	return Event(CLHelper::run_kernel(get_queue(), kernel, work_dim, offset, size, local_size, get_event_id_list()));
+	return Event(CLHelper::run_kernel(get_queue(), kernel, offsets, sizes, local_sizes, get_event_id_list()));
 }

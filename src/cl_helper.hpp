@@ -57,7 +57,7 @@ class CLHelper {
 		static std::string get_program_log(cl_program program, cl_device_id device_id);
 		static cl_kernel create_kernel(cl_program program, std::string kernel_name);
 		static void set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, void *arg_value);
-		static cl_event run_kernel(cl_command_queue queue, cl_kernel kernel, cl_uint work_dim, const size_t offset, const size_t size, const size_t local_size, std::vector<cl_event> events = {});
+		static cl_event run_kernel(cl_command_queue queue, cl_kernel kernel, const std::vector<size_t> offset, const std::vector<size_t> size, const std::vector<size_t> local_size, std::vector<cl_event> events = {});
 		static void await_events(std::vector<cl_event>);
 		static void flush(cl_command_queue queue);
 		static void finish(cl_command_queue queue);
