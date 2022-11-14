@@ -6,13 +6,15 @@
 namespace cl_high {
 	class ProgramBuilder;
 	class BufferBuilder;
+	class QueueBuilder;
 	class ComputeStation;
 	
 	class Context {
 		Context(cl_context context, cl_device_id device_id);
 		friend ProgramBuilder;
-		friend ComputeStation;
+		friend QueueBuilder;
 		friend BufferBuilder;
+		friend ComputeStation;
 		
 		public:
 			Context();

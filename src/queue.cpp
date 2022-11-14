@@ -29,6 +29,16 @@ cl_command_queue cl_high::Queue::get() {
 	return queue;
 }
 
+cl_high::QueueBuilder cl_high::Queue::from(Context context) {
+	return QueueBuilder(context);
+}
+
 void cl_high::Queue::flush() {
 	CLHelper::flush(queue);
+}
+
+cl_high::QueueBuilder::QueueBuilder(Context context): context(context) {}
+
+cl_high::Queue cl_high::QueueBuilder::build() {
+	return Queue(CLHelper::create_queue(context.get(), context.device()));
 }

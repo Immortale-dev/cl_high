@@ -35,7 +35,7 @@ cl_high::Context cl_high::ComputeStation::get_context() {
 }
 
 cl_high::Queue cl_high::ComputeStation::create_queue() {
-	return Queue(CLHelper::create_queue(context, device_id));
+	return Queue::from(get_context()).build();
 }
 
 cl_high::Program cl_high::ComputeStation::build(std::vector<std::string> sources, std::string options) {

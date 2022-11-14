@@ -29,7 +29,10 @@ High level **C++** [OpenCL](https://registry.khronos.org/OpenCL/sdk/1.0/docs/man
 			* [const CLHelper::DeviceInfo& get_info()](#const-clhelperdeviceinfo-get_info)
 		* [class cl_high::Context](#class-cl_highcontext)
 		* [class cl_high::Queue](#class-cl_highqueue)
+			* [static QueueBuilder from(cl_high::Context context)](#static-queuebuilder-fromcl_highcontext-context)
 			* [void flush()](#void-flush)
+		* [class cl_high::QueueBuilder](#class-cl_highqueuebuilder)
+			* [cl_high::Queue build()](#cl_highqueue-build)
 		* [class cl_high::Buffer](#class-cl_highbuffer)
 			* [static cl_high::BufferBuilder from(cl_high::Context context)](#static-cl_highbufferbuilder-fromcl_highcontext-context)
 			* [size_t size()](#size_t-size)
@@ -197,8 +200,19 @@ ___
 ### class cl_high::Queue
 Used to process the data read/write from or to computation device and run kernel functions.
 
+#### static QueueBuilder from(cl_high::Context context)
+Creates and returns `QueueBuilder` class instance from the `cl_high::Context` which allows to build a `cl_high::Queue`.
+
 #### void flush()
 blocks current thread and awaits all the operations at the queue to finish.
+
+___
+
+### class cl_high::QueueBuilder
+Used to build a `cl_high::Queue`.
+
+#### cl_high::Queue build()
+Creates and returns `cl_high::Queue`.
 
 ___
 
