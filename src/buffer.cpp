@@ -1,6 +1,6 @@
 #include "buffer.hpp"
 
-cl_high::Buffer::Buffer() {}
+cl_high::Buffer::Buffer() : size_bytes(0) {}
 
 cl_high::Buffer::Buffer(cl_mem mem, AccessType type, size_t size_bytes) : mem(mem), type(type), size_bytes(size_bytes) {}
 
