@@ -1,14 +1,15 @@
 #include <iostream>
 #include <cassert>
+#include <chrono>
 
 #include "cl_helper.hpp"
 
 std::string source = 
 "__kernel                                   \n"
 "void fn_kernel(float alpha,     \n"
-"                  __global float *A,       \n"
-"                  __global float *B,       \n"
-"                  __global float *C)       \n"
+"                  __global float4 *A,       \n"
+"                  __global float4 *B,       \n"
+"                  __global float4 *C)       \n"
 "{                                          \n"
 "    //Get the index of the work-item       \n"
 "    int index = get_global_id(0);          \n"
@@ -53,7 +54,7 @@ int main() {
 	std::cout << "CL_COMMAND_QUEUE: " << queue << std::endl;
 
 	///////
-	const size_t VECTOR_SIZE = 1000000;
+	const size_t VECTOR_SIZE = 1024 * 1024 * 100;
 	std::vector<float> A(VECTOR_SIZE), B(VECTOR_SIZE), C(VECTOR_SIZE);
 	for(size_t i = 0; i < VECTOR_SIZE; i++)
 	{
@@ -114,11 +115,16 @@ int main() {
 	///////
 
 	size_t local_size = 64;
-	cl_event er = CLHelper::run_kernel(queue, kernel, 1, 0, VECTOR_SIZE, local_size, {ea, eb});
+	
+	auto t1 = std::chrono::system_clock::now();
+	cl_event er = CLHelper::run_kernel(queue, kernel, {0}, {VECTOR_SIZE/4}, {local_size}, {ea, eb});
+	CLHelper::await_events({er});
+	auto t2 = std::chrono::system_clock::now();
+	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count() << "ms" << std::endl;
 
 	///////
 
-	cl_event ac = CLHelper::read(queue, C_clmem, 0, VECTOR_SIZE * sizeof(float), C.data(), {er});
+	cl_event ac = CLHelper::read(queue, C_clmem, 0, VECTOR_SIZE * sizeof(float), C.data());
 
 	///////
 
@@ -145,7 +151,7 @@ int main() {
 	///////
 
 	for(size_t i=0;i<VECTOR_SIZE;i++) {
-		assert(C[i] == 2000000);
+		assert(C[i] == 2 * VECTOR_SIZE);
 	}
 
 	std::cout << "FINISHED" << std::endl;
