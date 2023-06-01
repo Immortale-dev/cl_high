@@ -29,6 +29,7 @@ namespace cl_high {
 			
 			void release();
 			size_t size();
+			bool empty();
 			
 			static BufferBuilder from(Context context);
 			

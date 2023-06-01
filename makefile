@@ -19,7 +19,7 @@ custom: mtest.exe
 
 lib: liboutput.a
 
-clear: ; $(RM) src/*.o *.exe liboutput.a
+clear: ; $(RM) src/*.o test/*.o *.exe liboutput.a
 
 liboutput.a: $(OBJS)
 	$(RM) liboutput.a

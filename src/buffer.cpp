@@ -36,6 +36,10 @@ size_t cl_high::Buffer::size() {
 	return size_bytes;
 }
 
+bool cl_high::Buffer::empty() {
+	return size() == 0;
+}
+
 cl_mem& cl_high::Buffer::get() {
 	return mem;
 }

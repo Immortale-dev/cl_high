@@ -60,10 +60,14 @@ DESCRIBE("cl_high", {
 			cl_high::Buffer b2 = compute.create_buffer<float>(cl_high::AccessType::READ, 1000);
 			cl_high::Buffer b3 = cl_high::Buffer::from(compute.get_context()).allocate(cl_high::AccessType::READ, sizeof(float) * 1000);
 			cl_high::Buffer b4 = cl_high::Buffer::from(compute.get_context()).allocate<float>(cl_high::AccessType::READ, 1000);
+			cl_high::Buffer empty_buf;
 			
+			EXPECT(empty_buf.empty()).toBe(true);
+			EXPECT(empty_buf.size()).toBe(0);
 			EXPECT(b1.size()).toBe(b2.size());
 			EXPECT(b2.size()).toBe(b3.size());
 			EXPECT(b3.size()).toBe(b4.size());
+			EXPECT(b1.empty()).toBe(false);
 		});
 		
 		IT("should build a program", {
